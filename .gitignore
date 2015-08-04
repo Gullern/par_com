@@ -1,0 +1,24 @@
+# gitignore
+
+## Compiles
+*.o
+*.mod
+
+## Builds
+*.exe
+*.out
+
+## Python byte code
+*.pyc
+
+## Potentially large generated datafiles
+*.dat
+*.log
+
+## Temporary files
+*.swp
+
+## Config files
+.init
+.structure
+
