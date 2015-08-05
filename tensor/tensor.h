@@ -27,6 +27,7 @@ private:
 
     /* Const functions */
     unsigned long long index(const unsigned INDEXING_DATA_TYPE *pos) const;
+    void validate_input(unsigned int num_dims, const unsigned INDEXING_DATA_TYPE *size, Initialization init, double value) const;
 
 public:
     /* Constructors and destructors */

@@ -1,5 +1,5 @@
 ## SOURCE
-AUTOBUILDS  = speed_test
+AUTOBUILDS  = speed_test loop_test
 BUILDS      =
 MODULES     =
 STDMODS     = 
