@@ -6,7 +6,7 @@
 int main(int argc, char **argv) {
 
     std::cout << "test-1\n";
-    const int N = 100;
+    const int N = 1000;
     Tensor<int> t(2, {N, N});
     Tensor<int> s(2, {N, N});
 
@@ -22,23 +22,19 @@ int main(int argc, char **argv) {
 
     std::cout << "test1\n";
 
-/*
     int **mat_a = new int*[N];
     int **mat_b = new int*[N];
     int **mat_r = new int*[N];
     for (int i = 0; i < N; ++i) {
         mat_a[i] = new int[N];
-        mat_
+        mat_b[i] = new int[N];
+        mat_r[i] = new int[N];
     }
-
-    int **mat_b[N][N] = new int[N][N];
-    int **mat_r[N][N] = new int[N][N];
-*/
-
-
+/*
     int mat_a[N][N];
     int mat_b[N][N];
     int mat_r[N][N];
+*/
 
     std::cout << "test2\n";
 
