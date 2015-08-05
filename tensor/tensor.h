@@ -3,6 +3,9 @@
 
 #define INDEXING_DATA_TYPE int
 
+#include <initializer_list>
+#include <string>
+
 
 template <typename T>
 class Tensor {
@@ -54,6 +57,7 @@ public:
     /* Operators */
     template <typename S>
     friend std::ostream& operator <<(std::ostream &out, const Tensor<S> &t);
+
     /*
     Tensor& operator=(const Tensor& rhs);
     Tensor& operator+=(const Tensor& rhs);
@@ -63,6 +67,9 @@ public:
     Tensor& operator-(const Tensor& rhs);
     Tensor& operator*(const Tensor& rhs);
     */
+
+    /* Math */
+    Tensor<T> test_mul(Tensor &t);
 };
 
 

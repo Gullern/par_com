@@ -5,14 +5,14 @@
 
 #include "tensor.h"
 
-
+/*
 int main(int argc, char **argv) {
     unsigned int dims = 3;
     Tensor<double> t(dims, {3, 3, 3}, Tensor<double>::Initialization::CONSTANT, 736.384);
 
     std::cout << t.get({0, 0, 0}) << std::endl;
     std::cout << t.get({1, 3, 2}) << std::endl;
-
+*/
 /*
     std::cout << "test\n";
     std::cout << t.to_string().length() << std::endl;
@@ -26,8 +26,10 @@ int main(int argc, char **argv) {
 
     std::cout << t.to_string() << std::endl;
 */
+/*
     return 0;
 }
+*/
 
 template <typename T>
 Tensor<T>::Tensor(unsigned int num_dims, const unsigned INDEXING_DATA_TYPE *size, Initialization init, double value) : num_dims(num_dims){
@@ -189,7 +191,7 @@ unsigned long long Tensor<T>::get_num_elements() const {
 
 template <typename T>
 unsigned INDEXING_DATA_TYPE Tensor<T>::get_dim_size(unsigned int dimension) const {
-    return size[index];
+    return size[dimension];
 }
 
 template <typename T>
@@ -305,4 +307,23 @@ template <typename S>
 std::ostream& operator <<(std::ostream &out, const Tensor<S> &t) {
     return out << t.to_string();
 }
+
+template <typename T>
+Tensor<T> Tensor<T>::test_mul(Tensor &t) {
+    Tensor<T> r(2, {size[0], size[0]});
+    unsigned int N = size[0];
+
+    for (unsigned int i = 0; i < N; ++i) {
+        for (unsigned int j = 0; j < N; ++j) {
+            int el = 0;
+            for (unsigned int k = 0; k < N; ++k) {
+                el += get({i, k}) * t.get({k, j});
+            }
+            r.set({i, j}, el);
+        }
+    }
+    return r;
+}
+
+template class Tensor<int>;
 
