@@ -79,7 +79,7 @@ Tensor<T>::Tensor(const Tensor& other) : Tensor(0, 0) {
 }
 
 template <typename T>
-Tensor<T>::~Tensor() {
+Tensor<T>::~Tensor() noexcept {
     delete[] data;
     delete[] size;
     delete[] displ;
