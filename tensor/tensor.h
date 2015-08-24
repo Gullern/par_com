@@ -45,7 +45,7 @@ public:
     Tensor(unsigned int num_dims, const unsigned INDEXING_DATA_TYPE *size, Initialization init = Initialization::ZERO, double value = 0);
     Tensor(unsigned int num_dims, const std::initializer_list<unsigned INDEXING_DATA_TYPE>& size, Initialization init = Initialization::ZERO, double value = 0);
     //Tensor(const Tensor& other);
-    ~Tensor();
+    ~Tensor() noexcept;
 
     /* Const functions */
     bool is_square() const;
