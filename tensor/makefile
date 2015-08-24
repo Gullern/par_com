@@ -1,6 +1,6 @@
 ## SOURCE
-AUTOBUILDS  = 
-BUILDS      = mul_test
+AUTOBUILDS  = mul_test
+BUILDS      = 
 MODULES     =
 STDMODS     = 
 LIBS        =
@@ -87,8 +87,6 @@ stdmods: $(STDMODS)
 
 
 ## DEPENDENCIES
-mul_test.out: mul_test.o tensor.o
-	$(LINK)
 
 
 ## PATTERNS

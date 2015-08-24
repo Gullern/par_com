@@ -2,6 +2,7 @@
 #include <initializer_list>
 #include <cmath>
 #include <sstream>
+#include <algorithm>
 
 #include "tensor.h"
 
@@ -64,6 +65,10 @@ Tensor<T>::Tensor(unsigned int num_dims, const unsigned INDEXING_DATA_TYPE *size
     // Allocate data
     data = new T[num_elements];
 
+
+    level = 0;
+    temp = data;
+
     // Initiate with appropriate elements
     initiate(init, value);
 }
@@ -73,10 +78,12 @@ Tensor<T>::Tensor(unsigned int num_dims, const std::initializer_list<unsigned IN
     // EMPTY
 }
 
+/*
 template <typename T>
 Tensor<T>::Tensor(const Tensor& other) : Tensor(0, 0) {
 
 }
+*/
 
 template <typename T>
 Tensor<T>::~Tensor() {
@@ -309,21 +316,99 @@ std::ostream& operator <<(std::ostream &out, const Tensor<S> &t) {
 }
 
 template <typename T>
-Tensor<T> Tensor<T>::test_mul(Tensor &t) {
-    Tensor<T> r(2, {size[0], size[0]});
+void Tensor<T>::test_mul(Tensor<T> &t, Tensor<T> &r) {
+    //Tensor<T> rr(2, {size[0], size[0]});
     unsigned int N = size[0];
 
+    T *temp;
     for (unsigned int i = 0; i < N; ++i) {
         for (unsigned int j = 0; j < N; ++j) {
-            int el = 0;
-            for (unsigned int k = 0; k < N; ++k) {
-                el += get({i, k}) * t.get({k, j});
+            /*
+            *(r[i][j]) = *((*this)[i][0]) * *(t[0][j]);
+            for (unsigned int k = 1; k < N; ++k) {
+                *(r[i][j]) += *((*this)[i][k]) * *(r[k][j]);
             }
-            r.set({i, j}, el);
+            */
+            /*
+            T &temp = *(r[i][j]);
+            temp = *((*this)[i][0]) * *(t[0][j]);
+            for (unsigned int k = 1; k < N; ++k) {
+                temp += *((*this)[i][k]) * *(r[k][j]);
+            }
+            */
+
+            /*
+            temp = r.q_get(i, j);
+            *temp = *(this->q_get(i, 0)) * *(t.q_get(0, j));
+            for (unsigned int k = 1; k < N; ++k) {
+                *temp += *(this->q_get(i, k)) * *(t.q_get(k, j));
+            }
+            */
+            /*
+            temp = rr.qq_get({i, j});
+            *temp = *(this->qq_get({i, 0})) * *(t.qq_get({0, j}));
+            for (unsigned int k = 1; k < N; ++k) {
+                *temp += *(this->qq_get({i, k})) * *(t.qq_get({k, j}));
+            }
+            */
+            temp = r.qqq_get({i, j});
+            *temp = *(this->qqq_get({i, 0})) * *(t.qqq_get({0, j}));
+            for (unsigned int k = 1; k < N; ++k) {
+                *temp += *(this->qqq_get({i, k})) * *(t.qqq_get({k, j}));
+            }
+
         }
     }
-    return r;
 }
 
-template class Tensor<int>;
+template <typename T>
+Tensor<T>& Tensor<T>::operator [](INDEXING_DATA_TYPE i) {
+    if (level == num_dims) {
+        temp = data;
+        level = 0;
+    }
+    temp += i * displ[level++];
+    return *this;
+}
+
+template <typename T>
+T& Tensor<T>::operator *() {
+    return *temp;
+}
+
+template <typename T>
+T* Tensor<T>::q_get(unsigned int i, unsigned int j) {
+    return data + i * displ[0] + j;
+}
+
+template <typename T>
+T* Tensor<T>::qq_get(const std::initializer_list<unsigned int>& pos) {
+    unsigned long long *temp = displ;
+    T *data_temp = data;
+    for (unsigned int i : pos) {
+        data_temp += i * *(temp++);
+    }
+    return data_temp;
+}
+
+template <typename T>
+T* Tensor<T>::qqq_get(const std::initializer_list<unsigned int>& pos) {
+    unsigned long long *temp = displ;
+    T *data_temp = data;
+    std::for_each(pos.begin(), pos.end(), 
+        [temp, &data_temp] (unsigned int i) mutable {
+            data_temp += i * *(temp++);
+        }
+    );
+    return data_temp;
+}
+
+template <typename T>
+template <typename ValueType>
+Tensor<T>::iterator_template<ValueType>::iterator_template() {
+    std::cout << "cstr itr\n";
+
+    typedef typename Tensor<T>:: template iterator_template<ValueType>::pointer pointer;
+    std::cout << typeid(pointer).name() << '\n';
+}
 

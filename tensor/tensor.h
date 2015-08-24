@@ -1,11 +1,11 @@
 #ifndef TENSOR_H
 #define TENSOR_H
 
-#define INDEXING_DATA_TYPE int
-
 #include <initializer_list>
 #include <string>
+#include <iterator>
 
+#define INDEXING_DATA_TYPE int
 
 template <typename T>
 class Tensor {
@@ -13,6 +13,11 @@ public:
     /* Defines types of initialization of tensor elements */
     enum Initialization { ZERO, IDENTITY, CONSTANT };
 
+    template <typename ValueType>
+    class iterator_template : public std::iterator<std::random_access_iterator_tag, ValueType> {
+    public:
+        iterator_template();
+    };
 private:
     /* Data */
     T *data;
@@ -25,6 +30,9 @@ private:
     unsigned long long jump;
     bool degenerate;
 
+    T *temp;
+    unsigned int level;
+
     /* Non-const functions */
     void initiate(Initialization init, double value = 0);
 
@@ -36,7 +44,7 @@ public:
     /* Constructors and destructors */
     Tensor(unsigned int num_dims, const unsigned INDEXING_DATA_TYPE *size, Initialization init = Initialization::ZERO, double value = 0);
     Tensor(unsigned int num_dims, const std::initializer_list<unsigned INDEXING_DATA_TYPE>& size, Initialization init = Initialization::ZERO, double value = 0);
-    Tensor(const Tensor& other);
+    //Tensor(const Tensor& other);
     ~Tensor();
 
     /* Const functions */
@@ -58,6 +66,11 @@ public:
     template <typename S>
     friend std::ostream& operator <<(std::ostream &out, const Tensor<S> &t);
 
+    Tensor<T>& operator [](INDEXING_DATA_TYPE i);
+    T& operator *();
+    T* q_get(unsigned int i, unsigned int j);
+    T* qq_get(const std::initializer_list<unsigned int> &pos);
+    T* qqq_get(const std::initializer_list<unsigned int> &pos);
     /*
     Tensor& operator=(const Tensor& rhs);
     Tensor& operator+=(const Tensor& rhs);
@@ -69,8 +82,13 @@ public:
     */
 
     /* Math */
-    Tensor<T> test_mul(Tensor &t);
+    //Tensor<T>* test_mul(Tensor &t);
+    void test_mul(Tensor<T> &t, Tensor<T> &r);
+
+    typedef iterator_template<T> iterator;
+    typedef iterator_template<const T> const_iterator;
 };
 
+#include "tensor_impl.h"
 
 #endif
